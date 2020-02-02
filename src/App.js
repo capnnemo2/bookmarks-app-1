@@ -81,7 +81,8 @@ class App extends Component {
     // const { bookmarks } = this.state
     const contextValue = {
       bookmarks: this.state.bookmarks,
-      addBookmark: this.addBookmark
+      addBookmark: this.addBookmark,
+      deleteBookmark: this.deleteBookmark
     };
     return (
       <main className="App">
