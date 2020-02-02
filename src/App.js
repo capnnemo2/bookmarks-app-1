@@ -50,6 +50,15 @@ class App extends Component {
     });
   };
 
+  deleteBookmark = bookmarkId => {
+    const newBookmarks = this.state.bookmarks.filter(
+      bm => bookmarkId.id !== bookmarkId
+    );
+    this.setState({
+      bookmarks: newBookmarks
+    });
+  };
+
   componentDidMount() {
     fetch(config.API_ENDPOINT, {
       method: "GET",
