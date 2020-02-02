@@ -80,24 +80,8 @@ class App extends Component {
         <BookmarksContext.Provider value={contextValue}>
           <Nav />
           <div className="content" aria-live="polite">
-            <Route
-              path="/add-bookmark"
-              render={({ history }) => {
-                return (
-                  <AddBookmark
-                    onAddBookmark={this.addBookmark}
-                    onClickCancel={() => history.push("/")}
-                  />
-                );
-              }}
-            />
-            <Route
-              exact
-              path="/"
-              render={({ history }) => {
-                return <BookmarkList bookmarks={bookmarks} />;
-              }}
-            />
+            <Route path="/add-bookmark" component={AddBookmark} />
+            <Route exact path="/" component={BookmarkList} />
           </div>
         </BookmarksContext.Provider>
       </main>
