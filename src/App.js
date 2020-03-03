@@ -1,58 +1,61 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import AddBookmark from './AddBookmark/AddBookmark';
-import BookmarkList from './BookmarkList/BookmarkList';
-import BookmarksContext from './BookmarksContext';
-import Nav from './Nav/Nav';
-import config from './config';
-import './App.css';
+import React, { Component } from "react";
+import { Route } from "react-router-dom";
+import AddBookmark from "./AddBookmark/AddBookmark";
+import EditBookmark from "./EditBookmark/EditBookmark";
+import BookmarkList from "./BookmarkList/BookmarkList";
+import BookmarksContext from "./BookmarksContext";
+import Nav from "./Nav/Nav";
+import config from "./config";
+import "./App.css";
 
 class App extends Component {
   state = {
     bookmarks: [],
-    error: null,
+    error: null
   };
 
   setBookmarks = bookmarks => {
     this.setState({
       bookmarks,
-      error: null,
-    })
-  }
+      error: null
+    });
+  };
 
   addBookmark = bookmark => {
     this.setState({
-      bookmarks: [ ...this.state.bookmarks, bookmark ],
-    })
-  }
+      bookmarks: [...this.state.bookmarks, bookmark]
+    });
+  };
 
   deleteBookmark = bookmarkId => {
-    console.log(bookmarkId)
+    console.log(bookmarkId);
     // todo: remove bookmark with bookmarkId from state
-    const newBookmarks = this.state.bookmarks.filter(bm =>
-      bm.id !== bookmarkId
-    )
+    const newBookmarks = this.state.bookmarks.filter(
+      bm => bm.id !== bookmarkId
+    );
     this.setState({
       bookmarks: newBookmarks
-    })
-  }
+    });
+  };
+
+  updateBookmark = () => {};
 
   componentDidMount() {
     fetch(config.API_ENDPOINT, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${config.API_KEY}`
+        "content-type": "application/json",
+        Authorization: `Bearer ${config.API_KEY}`
       }
     })
       .then(res => {
         if (!res.ok) {
-          throw new Error(res.status)
+          throw new Error(res.status);
         }
-        return res.json()
+        return res.json();
       })
       .then(this.setBookmarks)
-      .catch(error => this.setState({ error }))
+      .catch(error => this.setState({ error }));
   }
 
   render() {
@@ -60,22 +63,17 @@ class App extends Component {
       bookmarks: this.state.bookmarks,
       addBookmark: this.addBookmark,
       deleteBookmark: this.deleteBookmark,
-    }
+      updateBookmark: this.updateBookmark
+    };
     return (
-      <main className='App'>
+      <main className="App">
         <h1>Bookmarks!</h1>
         <BookmarksContext.Provider value={contextValue}>
           <Nav />
-          <div className='content' aria-live='polite'>
-            <Route
-              path='/add-bookmark'
-              component={AddBookmark}
-            />
-            <Route
-              exact
-              path='/'
-              component={BookmarkList}
-            />
+          <div className="content" aria-live="polite">
+            <Route path="/add-bookmark" component={AddBookmark} />
+            <Route path="/edit/:bookmarkId" component={EditBookmark} />
+            <Route exact path="/" component={BookmarkList} />
           </div>
         </BookmarksContext.Provider>
       </main>
