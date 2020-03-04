@@ -7,22 +7,40 @@ export default class EditBookmark extends React.Component {
   static contextType = BookmarksContext;
 
   state = {
-    error: null
+    error: null,
+    id: "",
+    title: "",
+    url: "",
+    description: "",
+    rating: 1
   };
 
   componentDidMount() {
-    const bookmarkId = this.props.match.params.bookmarkId;
-    fetch(`http://localhost:8000/api/bookmarks/${bookmarkId}`, {
-      method: "GET"
+    const { bookmarkId } = this.props.match.params;
+    fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
+      method: "GET",
+      headers: {
+        authorization: `${config.API_KEY}`
+      }
     })
-      .then(/*   */)
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(error => Promise.reject(error));
+        }
+        return res.json();
+      })
       .then(resData => {
         this.setState({
-          /*   */
+          id: resData.id,
+          title: resData.title,
+          url: resData.url,
+          description: resData.description,
+          rating: resData.rating
         });
       })
-      .catch(err => {
-        /*   */
+      .catch(error => {
+        console.error(error);
+        this.setState({ error });
       });
   }
 
@@ -43,7 +61,7 @@ export default class EditBookmark extends React.Component {
   };
 
   render() {
-    // const { title, url, description, rating } = this.state;
+    const { title, url, description, rating } = this.state;
     return (
       <section className="EditBookmarkForm">
         <h2>Edit Bookmark</h2>
@@ -55,6 +73,7 @@ export default class EditBookmark extends React.Component {
               name="title"
               id="title"
               placeholder="fetch existing title"
+              value={title}
               required
             ></input>
           </div>
@@ -65,12 +84,13 @@ export default class EditBookmark extends React.Component {
               name="url"
               id="url"
               placeholder="fetch existing url"
+              value={url}
               required
             ></input>
           </div>
           <div>
             <label htmlFor="description">Description</label>
-            <textarea name="description" id="description" />
+            <textarea name="description" id="description" value={description} />
           </div>
           <div>
             <label htmlFor="rating">Rating</label>
@@ -79,6 +99,7 @@ export default class EditBookmark extends React.Component {
               name="rating"
               id="rating"
               defaultValue="fetch existing rating"
+              value={rating}
               min="1"
               max="5"
               required
