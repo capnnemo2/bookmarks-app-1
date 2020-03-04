@@ -44,16 +44,40 @@ export default class EditBookmark extends React.Component {
       });
   }
 
+  handleChangeTitle = e => {
+    this.setState({ title: e.target.value });
+  };
+
+  handleChangeUrl = e => {
+    this.setState({ url: e.target.value });
+  };
+
+  handleChangeDescription = e => {
+    this.setState({ description: e.target.value });
+  };
+
+  handleChangeRating = e => {
+    this.setState({ rating: e.target.value });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
-    //   need validation
-    fetch(
-      `https://localhost:8000/api/bookmarks/${this.props.match.bookmarkId}`,
-      {
-        method: "POST",
-        body: JSON.stringify(this.state.inputValues)
+    const { bookmarkId } = this.props.match.params;
+    const { id, title, url, description, rating } = this.state;
+    const newBookmark = { id, title, url, description, rating };
+    fetch(config.API_ENDPOINT + `${bookmarkId}`, {
+      method: "PATCH",
+      body: JSON.stringify(newBookmark),
+      headers: {
+        "content-type": "application/json",
+        authorization: `${config.API_KEY}`
       }
-    ).then(/*   */);
+    }).then(res => {
+      if (!res.ok) {
+        return res.json().then(error => Promise.reject(error));
+      }
+      return res.json();
+    });
   };
 
   handleClickCancel = () => {
@@ -61,11 +85,14 @@ export default class EditBookmark extends React.Component {
   };
 
   render() {
-    const { title, url, description, rating } = this.state;
+    const { title, url, description, rating, error } = this.state;
     return (
       <section className="EditBookmarkForm">
         <h2>Edit Bookmark</h2>
         <form className="EditBookmark__form" onSubmit={this.handleSubmit}>
+          <div className="EditBookmark__error" role="alert">
+            {error && <p>{error.message}</p>}
+          </div>
           <div>
             <label htmlFor="title">Title</label>
             <input
@@ -74,6 +101,7 @@ export default class EditBookmark extends React.Component {
               id="title"
               placeholder="fetch existing title"
               value={title}
+              onChange={this.handleChangeTitle}
               required
             ></input>
           </div>
@@ -85,12 +113,18 @@ export default class EditBookmark extends React.Component {
               id="url"
               placeholder="fetch existing url"
               value={url}
+              onChange={this.handleChangeUrl}
               required
             ></input>
           </div>
           <div>
             <label htmlFor="description">Description</label>
-            <textarea name="description" id="description" value={description} />
+            <textarea
+              name="description"
+              id="description"
+              value={description}
+              onChange={this.handleChangeDescription}
+            />
           </div>
           <div>
             <label htmlFor="rating">Rating</label>
@@ -100,6 +134,7 @@ export default class EditBookmark extends React.Component {
               id="rating"
               defaultValue="fetch existing rating"
               value={rating}
+              onChange={this.handleChangeRating}
               min="1"
               max="5"
               required
