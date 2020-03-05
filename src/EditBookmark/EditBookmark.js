@@ -72,11 +72,30 @@ export default class EditBookmark extends React.Component {
         "content-type": "application/json",
         authorization: `${config.API_KEY}`
       }
-    }).then(res => {
-      if (!res.ok) {
-        return res.json().then(error => Promise.reject(error));
-      }
-      return res.json();
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(error => Promise.reject(error));
+        }
+      })
+      .then(() => {
+        this.resetFields(newBookmark);
+        this.context.updateBookmark(newBookmark);
+        this.props.history.push("/");
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ error });
+      });
+  };
+
+  resetFields = newFields => {
+    this.setState({
+      id: newFields.id || "",
+      title: newFields.title || "",
+      url: newFields.url || "",
+      description: newFields.description || "",
+      rating: newFields.rating || ""
     });
   };
 
@@ -132,7 +151,6 @@ export default class EditBookmark extends React.Component {
               type="number"
               name="rating"
               id="rating"
-              defaultValue="fetch existing rating"
               value={rating}
               onChange={this.handleChangeRating}
               min="1"

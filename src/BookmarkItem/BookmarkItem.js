@@ -21,7 +21,6 @@ function deleteBookmarkRequest(bookmarkId, cb) {
           throw error;
         });
       }
-      return res.json();
     })
     .then(data => {
       console.log({ data });
