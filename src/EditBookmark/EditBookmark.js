@@ -65,7 +65,7 @@ export default class EditBookmark extends React.Component {
     const { bookmarkId } = this.props.match.params;
     const { id, title, url, description, rating } = this.state;
     const newBookmark = { id, title, url, description, rating };
-    fetch(config.API_ENDPOINT + `${bookmarkId}`, {
+    fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
       method: "PATCH",
       body: JSON.stringify(newBookmark),
       headers: {
