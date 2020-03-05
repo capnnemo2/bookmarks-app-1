@@ -38,7 +38,12 @@ class App extends Component {
     });
   };
 
-  updateBookmark = () => {};
+  updateBookmark = newBookmark => {
+    let bookmarks = this.state.bookmarks.map(b =>
+      b.id === newBookmark.id ? newBookmark : b
+    );
+    this.setState({ bookmarks });
+  };
 
   componentDidMount() {
     fetch(config.API_ENDPOINT, {
