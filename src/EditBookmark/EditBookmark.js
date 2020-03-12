@@ -115,7 +115,7 @@ export default class EditBookmark extends React.Component {
           <div>
             <label htmlFor="title">Title</label>
             <input
-              tyoe="text"
+              type="text"
               name="title"
               id="title"
               placeholder="fetch existing title"
