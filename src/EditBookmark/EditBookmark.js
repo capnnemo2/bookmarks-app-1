@@ -16,8 +16,13 @@ export default class EditBookmark extends React.Component {
   };
 
   componentDidMount() {
-    const { bookmarkId } = this.props.match.params;
-    fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
+    // const { bookmarkId } = this.props.match.params;
+    const mockMatch = {
+      params: {
+        bookmarkId: 20
+      }
+    };
+    fetch(config.API_ENDPOINT + `/${mockMatch}`, {
       method: "GET",
       headers: {
         authorization: `${config.API_KEY}`
